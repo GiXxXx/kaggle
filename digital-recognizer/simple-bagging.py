@@ -14,12 +14,9 @@ from mlxtend.classifier import StackingClassifier
 train_data = pd.read_csv("~/kaggle-workspace/kaggle/digital-recognizer/train.csv")
 test_data = pd.read_csv("~/kaggle-workspace/kaggle/digital-recognizer/test.csv")
 
-# pca=PCA(n_components=100, random_state=34)
-# train_data_pca=pca.fit_transform(train_data.values[:,1:])
-# test_data_pca=pca.fit_transform(train_data.values)
-
-train_data_pca = train_data.values[:, 1:]
-test_data_pca=test_data.values
+pca=PCA(n_components=100, random_state=34)
+train_data_pca=pca.fit_transform(train_data.values[:,1:])
+test_data_pca=pca.fit_transform(train_data.values)
 
 # lm_clf = SVC()
 # lm_clf.fit(train_data_pca,train_data.values[:, 0])
@@ -29,12 +26,14 @@ test_data_pca=test_data.values
 # lm_clf = BaggingClassifier(
 #     LogisticRegression(), max_features=1.0, max_samples=0.2)
 
-knn_clf = KNeighborsClassifier(n_jobs=-1)
+knn_clf = BaggingClassifier(
+    KNeighborsClassifier(n_jobs=-1), n_estimators=3, max_features=1.0, max_samples=0.3, n_jobs=-1)
 
 # nb_clf = BaggingClassifier(
 #     GaussianNB(), n_estimators=3, max_features=1.0, max_samples=0.3, n_jobs=-1)
 
-# svc_clf = SVC(C=4.0)
+# svc_clf  = BaggingClassifier(
+#     SVC(), n_estimators=3, max_features=1.0, max_samples=0.3, n_jobs=-1)
 
 rf_clf = RandomForestClassifier(n_estimators=110, max_depth=5,
                                                   min_samples_split=2, min_samples_leaf=1, random_state=34, n_jobs=-1)
